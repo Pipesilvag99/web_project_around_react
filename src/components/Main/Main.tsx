@@ -1,6 +1,38 @@
+import { useState } from 'react';
+import type { PopupConfig } from '../../types/types.ts';
 import avatar from '../../images/avatar.jpg';
+import Popup from './Popup/Popup';
+import NewCard from './Popup/NewCard/NewCard';
+import EditProfile from './Popup/EditProfile/EditProfile';
+import EditAvatar from './Popup/EditAvatar/EditAvatar';
 
-function Main(): React.JSX.Element {
+export default function Main(): React.JSX.Element {
+  // null = no hay ninguna ventana abierta
+  const [popup, setPopup] = useState<PopupConfig | null>(null);
+
+  const newCardPopup: PopupConfig = {
+    title: 'Nuevo lugar',
+    children: <NewCard />,
+  };
+
+  const editProfilePopup: PopupConfig = {
+    title: 'Editar perfil',
+    children: <EditProfile />,
+  };
+
+  const editAvatarPopup: PopupConfig = {
+    title: 'Cambiar foto de perfil',
+    children: <EditAvatar />,
+  };
+
+  function handleOpenPopup(popup: PopupConfig): void {
+    setPopup(popup);
+  }
+
+  function handleClosePopup(): void {
+    setPopup(null);
+  }
+
   return (
     <main className="content">
       <section className="profile page__section">
@@ -10,6 +42,7 @@ function Main(): React.JSX.Element {
             className="profile__avatar-overlay"
             type="button"
             aria-label="Cambiar foto de perfil"
+            onClick={() => handleOpenPopup(editAvatarPopup)}
           ></button>
         </div>
         <div className="profile__info">
@@ -18,6 +51,7 @@ function Main(): React.JSX.Element {
             aria-label="Editar perfil"
             className="profile__edit-button"
             type="button"
+            onClick={() => handleOpenPopup(editProfilePopup)}
           ></button>
           <p className="profile__description">Explorador</p>
         </div>
@@ -25,13 +59,22 @@ function Main(): React.JSX.Element {
           aria-label="Agregar tarjeta"
           className="profile__add-button"
           type="button"
+          onClick={() => handleOpenPopup(newCardPopup)}
         ></button>
       </section>
       <section className="cards page__section">
         <ul className="cards__list"></ul>
       </section>
+
+      {popup && (
+        <Popup
+          onClose={handleClosePopup}
+          title={popup.title}
+          isOpen={popup !== null}
+        >
+          {popup.children}
+        </Popup>
+      )}
     </main>
   );
 }
-
-export default Main;
