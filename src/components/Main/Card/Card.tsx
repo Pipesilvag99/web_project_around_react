@@ -1,15 +1,28 @@
-import type { CardData } from '../../../types/types.ts';
+import type { CardData, PopupConfig } from '../../../types/types.ts';
+import ImagePopup from '../Popup/ImagePopup/ImagePopup';
 
 type CardProps = {
   card: CardData;
+  handleOpenPopup: (popup: PopupConfig) => void;
 };
 
 export default function Card(props: CardProps): React.JSX.Element {
-  const { name, link } = props.card;
+  const { card, handleOpenPopup } = props;
+  const { name, link } = card;
+
+  // Popup sin título: así Popup sabe que es una imagen
+  const imageComponent: PopupConfig = {
+    children: <ImagePopup card={card} />,
+  };
 
   return (
     <li className="card">
-      <img className="card__image" src={link} alt={name} />
+      <img
+        className="card__image"
+        src={link}
+        alt={name}
+        onClick={() => handleOpenPopup(imageComponent)}
+      />
       <button
         aria-label="Eliminar tarjeta"
         className="card__delete-button"
