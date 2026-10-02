@@ -1,75 +1,80 @@
-# React + TypeScript + Vite
+# Alrededor de los EE.UU. — React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Proyecto del **Sprint 11** del bootcamp de Desarrollo Web Full Stack de **TripleTen**.
 
-Currently, two official plugins are available:
+Es la migración a **React + TypeScript** de "Alrededor de los EE.UU.", una red social de fotos donde el usuario tiene un perfil y comparte tarjetas de lugares que ha visitado. La versión anterior estaba hecha con HTML, CSS y JavaScript con programación orientada a objetos (clases `Card`, `Popup`, `FormValidator`, `Section`); en esta versión toda la interfaz se reconstruyó con componentes.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Funcionalidades
 
-## React Compiler
+- Perfil de usuario con avatar, nombre y descripción.
+- Tarjetas de lugares generadas dinámicamente a partir de un arreglo de datos.
+- Un componente `Popup` reutilizable para todas las ventanas emergentes:
+  - Editar perfil
+  - Cambiar foto de perfil
+  - Agregar un nuevo lugar
+  - Ver la imagen de una tarjeta en tamaño grande
+- Apertura y cierre de ventanas controlados con el estado de React (`useState`), sin manipular el DOM directamente.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tecnologías
 
-## Expanding the ESLint configuration
+- React
+- TypeScript
+- Vite
+- CSS con metodología BEM
+- ESLint
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Conceptos aplicados
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Componentes funcionales y composición (`Header`, `Main`, `Footer`, `Card`, `Popup`).
+- Props, desestructuración y tipado con TypeScript (`type`, `interface`).
+- Hook `useState` para manejar qué ventana emergente está abierta.
+- Paso de funciones por props, para que un componente hijo (`Card`) abra un popup cuyo estado vive en el padre (`Main`).
+- Renderizado condicional (`&&`, operador ternario) y de listas con `map` y `key`.
+- `children` para reutilizar un mismo contenedor con contenidos distintos.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Estructura
 
 ```
-
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+src/
+├── components/
+│   ├── App.tsx
+│   ├── Header/
+│   ├── Footer/
+│   └── Main/
+│       ├── Main.tsx
+│       ├── Card/
+│       └── Popup/
+│           ├── Popup.tsx
+│           ├── NewCard/
+│           ├── EditProfile/
+│           ├── EditAvatar/
+│           └── ImagePopup/
+├── types/
+│   └── types.ts
+├── blocks/      # estilos por bloque (BEM)
+├── images/
+└── vendor/      # normalize y fuentes
 ```
+
+## Cómo ejecutarlo
+
+```bash
+git clone git@github.com:Pipesilvag99/web_project_around_react.git
+cd web_project_around_react
+npm install
+npm run dev
+```
+
+El proyecto se abre en `http://localhost:3000`.
+
+## Próximos pasos
+
+- Conectar el proyecto con la API para cargar y guardar datos reales.
+- Editar el perfil y el avatar, crear y eliminar tarjetas desde los formularios.
+- Dar y quitar "me gusta" a las tarjetas.
+
+## Autor
+
+**Daniel Felipe Silva González** — Diseñador industrial en transición hacia el diseño UX/UI y el desarrollo web.
+
+- GitHub: [Pipesilvag99](https://github.com/Pipesilvag99)
