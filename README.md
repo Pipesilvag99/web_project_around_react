@@ -1,19 +1,18 @@
 # Alrededor de los EE.UU. — React
 
-Proyecto del **Sprint 11** del bootcamp de Desarrollo Web Full Stack de **TripleTen**.
+Proyecto de los **Sprints 11 y 12** del bootcamp de Desarrollo Web Full Stack de **TripleTen**.
 
-Es la migración a **React + TypeScript** de "Alrededor de los EE.UU.", una red social de fotos donde el usuario tiene un perfil y comparte tarjetas de lugares que ha visitado. La versión anterior estaba hecha con HTML, CSS y JavaScript con programación orientada a objetos (clases `Card`, `Popup`, `FormValidator`, `Section`); en esta versión toda la interfaz se reconstruyó con componentes.
+Es la migración a **React + TypeScript** de "Alrededor de los EE.UU.", una red social de fotos donde el usuario tiene un perfil y comparte tarjetas de lugares que ha visitado. En el Sprint 11 se reconstruyó toda la interfaz con componentes; en el Sprint 12 la aplicación se conectó a la API, de modo que los datos del perfil y las tarjetas son reales y se guardan en el servidor.
 
 ## Funcionalidades
 
-- Perfil de usuario con avatar, nombre y descripción.
-- Tarjetas de lugares generadas dinámicamente a partir de un arreglo de datos.
-- Un componente `Popup` reutilizable para todas las ventanas emergentes:
-  - Editar perfil
-  - Cambiar foto de perfil
-  - Agregar un nuevo lugar
-  - Ver la imagen de una tarjeta en tamaño grande
-- Apertura y cierre de ventanas controlados con el estado de React (`useState`), sin manipular el DOM directamente.
+- Perfil de usuario con avatar, nombre y descripción cargados desde la API.
+- Tarjetas de lugares cargadas desde el servidor.
+- Editar el perfil (el formulario se llena con los datos actuales) y cambiar el avatar.
+- Agregar un nuevo lugar, que aparece al principio de la lista.
+- Dar y quitar "me gusta" a las tarjetas.
+- Eliminar las tarjetas propias, con una ventana de confirmación.
+- Un componente `Popup` reutilizable para todas las ventanas emergentes.
 
 ## Tecnologías
 
@@ -27,10 +26,12 @@ Es la migración a **React + TypeScript** de "Alrededor de los EE.UU.", una red 
 
 - Componentes funcionales y composición (`Header`, `Main`, `Footer`, `Card`, `Popup`).
 - Props, desestructuración y tipado con TypeScript (`type`, `interface`).
-- Hook `useState` para manejar qué ventana emergente está abierta.
-- Paso de funciones por props, para que un componente hijo (`Card`) abra un popup cuyo estado vive en el padre (`Main`).
-- Renderizado condicional (`&&`, operador ternario) y de listas con `map` y `key`.
-- `children` para reutilizar un mismo contenedor con contenidos distintos.
+- Levantamiento de estado: `App` guarda el usuario, las tarjetas y la ventana abierta, y hace todas las peticiones a la API.
+- Context API (`CurrentUserContext`) para compartir el usuario actual y sus funciones sin pasar props de componente en componente.
+- `useEffect` para cargar el usuario y las tarjetas una sola vez, al montar la aplicación.
+- Componentes controlados (`useState`) en los formularios de perfil y de nuevo lugar, y no controlados (`useRef`) en el de avatar.
+- Actualización inmutable del estado con `map`, `filter` y el operador spread.
+- Una clase `Api` que centraliza las peticiones `fetch`, exportada como una instancia ya configurada.
 
 ## Estructura
 
@@ -42,15 +43,18 @@ src/
 │   ├── Footer/
 │   └── Main/
 │       ├── Main.tsx
-│       ├── Card/
-│       └── Popup/
-│           ├── Popup.tsx
-│           ├── NewCard/
-│           ├── EditProfile/
-│           ├── EditAvatar/
-│           └── ImagePopup/
-├── types/
-│   └── types.ts
+│       └── components/
+│           ├── Card/
+│           └── Popup/
+│               ├── Popup.tsx
+│               ├── NewCard/
+│               ├── EditProfile/
+│               ├── EditAvatar/
+│               ├── ImagePopup/
+│               └── RemoveCard/
+├── contexts/    # CurrentUserContext
+├── interfaces/  # UserData, CardData, CurrentUserContextType, ModalData
+├── utils/       # clase Api
 ├── blocks/      # estilos por bloque (BEM)
 ├── images/
 └── vendor/      # normalize y fuentes
@@ -67,14 +71,8 @@ npm run dev
 
 El proyecto se abre en `http://localhost:3000`.
 
-## Próximos pasos
-
-- Conectar el proyecto con la API para cargar y guardar datos reales.
-- Editar el perfil y el avatar, crear y eliminar tarjetas desde los formularios.
-- Dar y quitar "me gusta" a las tarjetas.
-
 ## Autor
 
-**Daniel Felipe Silva González** — Diseñador industrial en transición hacia el diseño UX/UI y el desarrollo web.
+**Daniel Felipe Silva González** 
 
 - GitHub: [Pipesilvag99](https://github.com/Pipesilvag99)

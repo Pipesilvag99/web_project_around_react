@@ -1,88 +1,72 @@
-import { useState } from 'react';
-import type { PopupConfig, CardData } from '../../types/types.ts';
-import avatar from '../../images/avatar.jpg';
-import Popup from './Popup/Popup';
-import NewCard from './Popup/NewCard/NewCard';
-import EditProfile from './Popup/EditProfile/EditProfile';
-import EditAvatar from './Popup/EditAvatar/EditAvatar';
-import Card from './Card/Card';
+import { useContext } from 'react';
+import CurrentUserContext from '../../contexts/CurrentUserContext.tsx';
+import type { CardData } from '../../interfaces/CardData.ts';
+import type { ModalData } from '../../interfaces/ModalData.ts';
+import Popup from './components/Popup/Popup';
+import NewCard from './components/Popup/NewCard/NewCard';
+import EditProfile from './components/Popup/EditProfile/EditProfile';
+import EditAvatar from './components/Popup/EditAvatar/EditAvatar';
+import Card from './components/Card/Card';
 
-// Datos ficticios: en el siguiente sprint vendrán de la API
-const cards: CardData[] = [
-  {
-    isLiked: false,
-    _id: '5d1f0611d321eb4bdcd707dd',
-    name: 'Yosemite Valley',
-    link: 'https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_yosemite.jpg',
-    owner: '5d1f0611d321eb4bdcd707dd',
-    createdAt: '2019-07-05T08:10:57.741Z',
-  },
-  {
-    isLiked: false,
-    _id: '5d1f064ed321eb4bdcd707de',
-    name: 'Lake Louise',
-    link: 'https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lake-louise.jpg',
-    owner: '5d1f0611d321eb4bdcd707dd',
-    createdAt: '2019-07-05T08:11:58.324Z',
-  },
-];
+type MainProps = {
+  cards: CardData[];
+  popup: ModalData | null;
+  onOpenPopup: (modalData: ModalData) => void;
+  onClosePopup: () => void;
+  onCardLike: (card: CardData) => void;
+  onCardDelete: (card: CardData) => void;
+};
 
-console.log(cards);
+export default function Main(props: MainProps): React.JSX.Element {
+  const { cards, popup, onOpenPopup, onClosePopup, onCardLike, onCardDelete } = props;
+  const { currentUser } = useContext(CurrentUserContext);
 
-export default function Main(): React.JSX.Element {
-  // null = no hay ninguna ventana abierta
-  const [popup, setPopup] = useState<PopupConfig | null>(null);
-
-  const newCardPopup: PopupConfig = {
+  const newCardPopup: ModalData = {
     title: 'Nuevo lugar',
     children: <NewCard />,
   };
 
-  const editProfilePopup: PopupConfig = {
+  const editProfilePopup: ModalData = {
     title: 'Editar perfil',
     children: <EditProfile />,
   };
 
-  const editAvatarPopup: PopupConfig = {
+  const editAvatarPopup: ModalData = {
     title: 'Cambiar foto de perfil',
     children: <EditAvatar />,
   };
-
-  function handleOpenPopup(popup: PopupConfig): void {
-    setPopup(popup);
-  }
-
-  function handleClosePopup(): void {
-    setPopup(null);
-  }
 
   return (
     <main className="content">
       <section className="profile page__section">
         <div className="profile__avatar-wrapper">
-          <img className="profile__image" src={avatar} alt="Avatar" />
+          <img
+            className="profile__image"
+            src={currentUser?.avatar}
+            alt={currentUser?.name}
+          />
           <button
             className="profile__avatar-overlay"
             type="button"
             aria-label="Cambiar foto de perfil"
-            onClick={() => handleOpenPopup(editAvatarPopup)}
+            onClick={() => onOpenPopup(editAvatarPopup)}
           ></button>
         </div>
         <div className="profile__info">
-          <h1 className="profile__title">Jacques Cousteau</h1>
+          <h1 className="profile__title">{currentUser?.name}</h1>
           <button
             aria-label="Editar perfil"
             className="profile__edit-button"
             type="button"
-            onClick={() => handleOpenPopup(editProfilePopup)}
+            onClick={() => onOpenPopup(editProfilePopup)}
           ></button>
-          <p className="profile__description">Explorador</p>
+          <p className="profile__description">{currentUser?.about}</p>
         </div>
         <button
           aria-label="Agregar tarjeta"
           className="profile__add-button"
           type="button"
-          onClick={() => handleOpenPopup(newCardPopup)}
+          onClick={() => onOpenPopup(newCardPopup)}
         ></button>
       </section>
       <section className="cards page__section">
@@ -91,18 +75,16 @@ export default function Main(): React.JSX.Element {
             <Card
               key={card._id}
               card={card}
-              handleOpenPopup={handleOpenPopup}
+              onOpenPopup={onOpenPopup}
+              onCardLike={onCardLike}
+              onCardDelete={onCardDelete}
             />
           ))}
         </ul>
       </section>
 
       {popup && (
-        <Popup
-          onClose={handleClosePopup}
-          title={popup.title}
-          isOpen={popup !== null}
-        >
+        <Popup onClose={onClosePopup} title={popup.title} isOpen={popup !== null}>
           {popup.children}
         </Popup>
       )}
